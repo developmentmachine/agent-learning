@@ -3,7 +3,7 @@
 > 整理日期：2026-06-09  
 > 源码参考：[NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)  
 > 本地 Demo：`demos/hermes-closed-loop-learning/`  
-> 相关文档：[Hermes Skill 动态加载](./hermes-skill-dynamic-loading.md)（程序式记忆的加载侧）
+> 相关文档：[Hermes Skill 动态加载](./hermes-skill-dynamic-loading.md)（程序式记忆的加载侧）· [Agent System Prompt 模板](./agent-system-prompt-templates.md)（Coding / Oncall / Review 落地骨架）
 
 ---
 

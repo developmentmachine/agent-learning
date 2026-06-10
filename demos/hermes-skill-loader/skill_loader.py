@@ -762,15 +762,74 @@ def mock_agent_decide(user_text: str, loader: HermesSkillLoader) -> list[ToolCal
         return user_text  # handled as slash command, not tool
 
     if "list" in lower and "skill" in lower:
-        return [("skills_list", {})]
+        category = None
+        for cat in ("general", "oncall", "review"):
+            if cat in lower:
+                category = cat
+                break
+        return [("skills_list", {"category": category} if category else {})]
+
+    # ── Template A: general / coding ─────────────────────────────────────
+    if any(k in lower for k in ("explore", "where is", "find usages", "navigate repo")):
+        return [("skill_view", {"name": "repo-explore"})]
+
+    if "implement" in lower and "feature" in lower:
+        return [("skill_view", {"name": "implement-feature"})]
+
+    if "run test" in lower or "run tests" in lower or lower.strip() == "tests":
+        return [("skill_view", {"name": "run-tests"})]
+
+    if any(k in lower for k in ("build fail", "compile error", "debug build")):
+        return [("skill_view", {"name": "debug-build"})]
 
     if "deploy" in lower or "k8s" in lower or "kubernetes" in lower:
         return [("skill_view", {"name": "deploy-k8s"})]
 
-    if "review" in lower and "code" in lower:
+    # ── Template B: oncall ─────────────────────────────────────────────────
+    if any(k in lower for k in ("incident", "oncall", "alert", "outage", "503")):
+        if "example" in lower or "gateway" in lower:
+            return [
+                (
+                    "skill_view",
+                    {
+                        "name": "incident-triage",
+                        "file_path": "references/example-gateway-503.md",
+                    },
+                )
+            ]
+        return [("skill_view", {"name": "incident-triage"})]
+
+    if "log search" in lower or ("search" in lower and "log" in lower):
+        return [("skill_view", {"name": "log-search"})]
+
+    if "trace" in lower:
+        return [("skill_view", {"name": "trace-analysis"})]
+
+    if "rollback" in lower:
+        return [("skill_view", {"name": "runbook-rollback"})]
+
+    if "escalat" in lower:
+        return [("skill_view", {"name": "escalation"})]
+
+    # ── Template C: review ─────────────────────────────────────────────────
+    if "security review" in lower or ("security" in lower and "review" in lower):
+        return [("skill_view", {"name": "security-review"})]
+
+    if "api contract" in lower or "breaking change" in lower:
+        return [("skill_view", {"name": "api-contract-review"})]
+
+    if "test gap" in lower or "missing test" in lower:
+        return [("skill_view", {"name": "test-gap-analysis"})]
+
+    if "diff scan" in lower or "scan diff" in lower:
+        return [("skill_view", {"name": "pr-diff-scan"})]
+
+    if "review" in lower and ("code" in lower or "pr" in lower):
         return [("skill_view", {"name": "code-review"})]
 
     if "reference" in lower or "checklist" in lower:
+        if "deploy" in lower or "k8s" in lower:
+            return [("skill_view", {"name": "deploy-k8s", "file_path": "references/checklist.md"})]
         return [("skill_view", {"name": "deploy-k8s", "file_path": "references/checklist.md"})]
 
     if "save skill" in lower or "create skill" in lower:
@@ -810,11 +869,11 @@ def mock_agent_decide(user_text: str, loader: HermesSkillLoader) -> list[ToolCal
 
     return (
         "I don't know which skill to load. Try:\n"
-        "  - list skills\n"
-        "  - deploy to k8s\n"
-        "  - /deploy-k8s\n"
-        "  - save skill (creates api-migration demo skill)\n"
-        "  - patch skill (updates api-migration)"
+        "  Coding:  list skills general | explore repo | run tests | debug build\n"
+        "  Oncall:  incident alert | log search | trace analysis | rollback | escalate\n"
+        "           incident example gateway 503  (loads reference write-up)\n"
+        "  Review:  review pr | security review | api contract | test gap\n"
+        "  Other:   deploy to k8s | /deploy-k8s | save skill | patch skill"
     )
 
 

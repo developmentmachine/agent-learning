@@ -9,6 +9,7 @@ Examples:
   python demo.py --turn "list skills"
   python demo.py --turn "save skill"          # skill_manage create demo
   python scenario.py                          # full scripted walkthrough
+  python scenario-templates.py                # Template A/B/C skills walkthrough
 """
 
 from __future__ import annotations
@@ -29,15 +30,17 @@ def print_banner() -> None:
     print(f"Skills directory: {SKILLS_DIR}")
     print()
     print("Try these inputs:")
-    print("  list skills")
-    print("  help me deploy to k8s")
-    print("  show me the deploy checklist reference")
-    print("  save skill          # skill_manage: create api-migration")
-    print("  patch skill         # skill_manage: patch api-migration")
-    print("  /deploy-k8s use canary strategy")
+    print("  list skills | list skills oncall | list skills review")
+    print("  explore repo | run tests | debug build")
+    print("  incident alert | incident example gateway 503")
+    print("  review pr | security review | test gap")
+    print("  help me deploy to k8s | /deploy-k8s")
+    print("  save skill | patch skill")
     print("  quit")
     print()
-    print("Full walkthrough (no API key): python scenario.py")
+    print("Walkthroughs (no API key):")
+    print("  python scenario.py")
+    print("  python scenario-templates.py")
     print()
 
 
