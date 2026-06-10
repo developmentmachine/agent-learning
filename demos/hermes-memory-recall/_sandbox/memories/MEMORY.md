@@ -1,0 +1,1 @@
+Project uses Python 3.12 and uv for scripts.

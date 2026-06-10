@@ -2,7 +2,8 @@
 
 > 整理日期：2026-06-09  
 > 源码参考：[NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)  
-> 本地 Demo：`demos/hermes-skill-loader/`
+> 本地 Demo：`demos/hermes-skill-loader/`  
+> 相关文档：[Hermes 闭环学习与记忆进化](./hermes-closed-loop-learning.md)（memory / Background Review / Curator）
 
 ---
 
