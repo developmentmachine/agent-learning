@@ -14,6 +14,7 @@
 | Skill 为何不全塞进 prompt、怎么按需加载 | [docs/hermes-skill-dynamic-loading.md](docs/hermes-skill-dynamic-loading.md) | `demos/hermes-skill-loader/scenario.py` |
 | Memory 进 prompt 还是进 tool message | [docs/hermes-closed-loop-learning.md](docs/hermes-closed-loop-learning.md) §3–4 | `demos/hermes-memory-recall/demo.py` |
 | 后台审查如何写 memory/skill、为何 fork | [docs/hermes-closed-loop-learning.md](docs/hermes-closed-loop-learning.md) §5+ | `demos/hermes-closed-loop-learning/demo.py` |
+| Agent 迭代怎么保证不退化、怎么做 Benchmark 与 Eval | [docs/agent-evaluation.md](docs/agent-evaluation.md) | `demos/agent-evaluation/` |
 
 ### 推荐学习路径（约 1–2 小时）
 
@@ -29,6 +30,8 @@
 5. demos/hermes-memory-recall/          ← 三种 recall 路径
         ↓
 6. demos/hermes-closed-loop-learning/   ← Background Review 模拟（可选深入）
+        ↓
+7. agent-evaluation.md                  ← 质量保障：Benchmark 与在线/离线 Eval 体系
 ```
 
 若时间紧，只走 **1 → 2 → 3** 即可建立「prompt 拼装 + skill 按需加载」的完整图景。
@@ -43,11 +46,13 @@ agent-learning/
 ├── docs/                     ← 原理与实践文档（中文）
 │   ├── agent-system-prompt-templates.md
 │   ├── hermes-skill-dynamic-loading.md
-│   └── hermes-closed-loop-learning.md
+│   ├── hermes-closed-loop-learning.md
+│   └── agent-evaluation.md
 └── demos/                    ← 可运行最小实现（对照上游 Hermes 注释）
     ├── hermes-skill-loader/      Skill 加载 + 15 个模板 skill 样例
     ├── hermes-memory-recall/     Memory 冻结快照 vs tool 召回
-    └── hermes-closed-loop-learning/  闭环学习 + Background Review
+    ├── hermes-closed-loop-learning/  闭环学习 + Background Review
+    └── agent-evaluation/         Benchmark 与 Eval 体系（探索中）
 ```
 
 ---
@@ -59,6 +64,7 @@ agent-learning/
 | [agent-system-prompt-templates.md](docs/agent-system-prompt-templates.md) | System prompt 四层模型；Coding / Oncall / Review 三套可落地模板；与 Cursor、Claude Code、OpenClaw 对照 |
 | [hermes-skill-dynamic-loading.md](docs/hermes-skill-dynamic-loading.md) | Tier-0 索引、`skill_view`、`skill_manage`、slash command、缓存与安全防护 |
 | [hermes-closed-loop-learning.md](docs/hermes-closed-loop-learning.md) | Memory vs Skill 分工、冻结快照、Background Review、Curator、nudge 触发 |
+| [agent-evaluation.md](docs/agent-evaluation.md) | Benchmark 与 Eval 的区别，离线轨迹评估与在线反馈闭环，基于 LLM-as-a-Judge 的质量保障体系 |
 
 文档之间已互相链接；从任意一篇顶部的「相关文档」可跳转。
 
