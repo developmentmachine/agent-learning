@@ -1,153 +1,88 @@
 # agent-learning
 
-围绕 **自研 Agent** 的机制学习与可运行 Demo，主线是 [Hermes Agent](https://github.com/NousResearch/hermes-agent) 的 Skill 加载、Memory 召回与闭环学习。文档 + 本地 Python Demo 对照阅读，**不需要 API Key** 即可跑通大部分流程。
+围绕 **自研高级 Agent** 的理论研究与工程落地实践。本项目不仅涵盖了 [Hermes Agent](https://github.com/NousResearch/hermes-agent) 的核心机制，还补齐了企业级 Agent 工程化所需的 **大脑编排、安全护栏、评测体系与全链路追踪**。
 
 ---
 
-## 怎么读这个仓库
+## 🚀 核心架构：Agent 五大支柱 + 工程层
 
-### 一句话地图
+自研 Agent 的理论核心可以总结为“5+1”模型，本项目通过 📄**文档** + 🚀**可运行 Demo** 对其进行了深度还原。
 
-| 你想搞懂什么 | 先读 | 再跑 |
-|--------------|------|------|
-| System prompt 怎么分层、三套模板长什么样 | [docs/agent-system-prompt-templates.md](docs/agent-system-prompt-templates.md) | `demos/hermes-skill-loader/scenario-templates.py` |
-| Skill 为何不全塞进 prompt、怎么按需加载 | [docs/hermes-skill-dynamic-loading.md](docs/hermes-skill-dynamic-loading.md) | `demos/hermes-skill-loader/scenario.py` |
-| Memory 进 prompt 还是进 tool message | [docs/hermes-closed-loop-learning.md](docs/hermes-closed-loop-learning.md) §3–4 | `demos/hermes-memory-recall/demo.py` |
-| 后台审查如何写 memory/skill、为何 fork | [docs/hermes-closed-loop-learning.md](docs/hermes-closed-loop-learning.md) §5+ | `demos/hermes-closed-loop-learning/demo.py` |
-| Agent 迭代怎么保证不退化、怎么做 Benchmark 与 Eval | [docs/agent-evaluation.md](docs/agent-evaluation.md) | `demos/agent-evaluation/` |
+### 1. 内核层 (Core Pillars)
+*   **Memory (会话与记忆)**：[docs/hermes-session-context-management.md](docs/hermes-session-context-management.md)
+    *   *Demo*: `demos/hermes-session-context-management/` (Prefix Cache、分级披露、双轨记忆)
+*   **Tools (技能加载)**：[docs/hermes-skill-dynamic-loading.md](docs/hermes-skill-dynamic-loading.md)
+    *   *Demo*: `demos/hermes-skill-loader/` (Tier-0 索引、按需加载详情)
+*   **Brain (编排循环)**：[docs/agent-core-reasoning-loop.md](docs/agent-core-reasoning-loop.md)
+    *   *Demo*: `demos/hermes-orchestration-loop/` (ReAct 推理循环、Self-Correction 自动纠错)
 
-### 推荐学习路径（约 1–2 小时）
-
-```
-1. agent-system-prompt-templates.md     ← 总览：prompt 四层 + Coding/Oncall/Review 模板
-        ↓
-2. hermes-skill-dynamic-loading.md      ← 程序式记忆：Progressive Disclosure
-        ↓
-3. demos/hermes-skill-loader/           ← 动手：索引 → skill_view → references
-        ↓
-4. hermes-closed-loop-learning.md       ← 声明式记忆 + 闭环学习
-        ↓
-5. demos/hermes-memory-recall/          ← 三种 recall 路径
-        ↓
-6. demos/hermes-closed-loop-learning/   ← Background Review 模拟（可选深入）
-        ↓
-7. agent-evaluation.md                  ← 质量保障：Benchmark 与在线/离线 Eval 体系
-```
-
-若时间紧，只走 **1 → 2 → 3** 即可建立「prompt 拼装 + skill 按需加载」的完整图景。
+### 2. 治理与工程层 (Governance & Engineering)
+*   **Eval (多维评测)**：[docs/agent-evaluation.md](docs/agent-evaluation.md)
+    *   *Demo*: `demos/agent-evaluation/` (面对**非确定性、黑盒化、错误级联放大**的三类评委体系)
+*   **Safety (安全护栏)**：[docs/agent-guardrails.md](docs/agent-guardrails.md)
+    *   *Demo*: `demos/agent-guardrails/` (输入拦截、HITL 人类在环、Token 预算控制)
+*   **Observability (全链路追踪)**：[docs/agent-observability.md](docs/agent-observability.md)
+    *   *Demo*: `demos/agent-observability/` (Trace ID、Span 结构化日志、事故复盘分析)
 
 ---
 
-## 目录结构
+## 📖 推荐学习路径
 
+```mermaid
+graph TD
+    A[1. System Prompt 分层设计] --> B[2. Skill 分级披露加载]
+    B --> C[3. 声明式/程序式双轨记忆]
+    C --> D[4. ReAct 推理循环与自我纠正]
+    D --> E[5. 确定性+Rubric 混合评测]
+    E --> F[6. 安全护栏与人类在环]
+    F --> G[7. 全链路观测与追踪]
 ```
-agent-learning/
-├── README.md                 ← 本文件（学习导航）
-├── docs/                     ← 原理与实践文档（中文）
-│   ├── agent-system-prompt-templates.md
-│   ├── hermes-skill-dynamic-loading.md
-│   ├── hermes-closed-loop-learning.md
-│   └── agent-evaluation.md
-└── demos/                    ← 可运行最小实现（对照上游 Hermes 注释）
-    ├── hermes-skill-loader/      Skill 加载 + 15 个模板 skill 样例
-    ├── hermes-memory-recall/     Memory 冻结快照 vs tool 召回
-    ├── hermes-closed-loop-learning/  闭环学习 + Background Review
-    └── agent-evaluation/         Benchmark 与 Eval 体系（探索中）
-```
+
+1.  **入门 (1-3)**：建立「Prompt 拼装 + 工具按需加载」的基础认知。
+2.  **进阶 (4)**：理解 Agent 如何通过 While 循环自主解决问题并修正错误。
+3.  **工业化 (5-7)**：学习如何让 Agent 在生产环境中稳定、安全、可监控。
 
 ---
 
-## 文档索引
+## 🛠️ Demo 快速开始
 
-| 文档 | 内容 |
-|------|------|
-| [agent-system-prompt-templates.md](docs/agent-system-prompt-templates.md) | System prompt 四层模型；Coding / Oncall / Review 三套可落地模板；与 Cursor、Claude Code、OpenClaw 对照 |
-| [hermes-skill-dynamic-loading.md](docs/hermes-skill-dynamic-loading.md) | Tier-0 索引、`skill_view`、`skill_manage`、slash command、缓存与安全防护 |
-| [hermes-closed-loop-learning.md](docs/hermes-closed-loop-learning.md) | Memory vs Skill 分工、冻结快照、Background Review、Curator、nudge 触发 |
-| [agent-evaluation.md](docs/agent-evaluation.md) | Benchmark 与 Eval 的区别，离线轨迹评估与在线反馈闭环，基于 LLM-as-a-Judge 的质量保障体系 |
+环境要求：**Python 3.10+**，无第三方依赖。
 
-文档之间已互相链接；从任意一篇顶部的「相关文档」可跳转。
-
----
-
-## Demo 快速开始
-
-环境：**Python 3.10+**，无第三方依赖。
-
-### 1. Skill 加载（建议第一个跑）
-
+### 核心编排与自动纠错
 ```bash
-cd demos/hermes-skill-loader
-
-# 三套模板 walkthrough：general / oncall / review
-python scenario-templates.py
-
-# 原有完整生命周期：create / patch / 安全扫描
-python scenario.py
-
-# 查看 Tier-0 索引（eager 模式）
-python demo.py --show-index
-
-# 交互式 mock agent（关键词触发 tool，无需 LLM）
-python demo.py
+# 观察 Agent 在工具报错时如何通过 Thought 修正自己
+python demos/hermes-orchestration-loop/demo.py
 ```
 
-**Skill 样例目录**（对应文档三套模板）：
-
-- `skills/general/` — repo-explore, implement-feature, run-tests, debug-build
-- `skills/oncall/` — incident-triage, log-search, trace-analysis, …
-- `skills/review/` — code-review, pr-diff-scan, security-review, …
-
-**Stable prompt 片段**（可复制进真实 Agent）：`prompts/stable-{coding,oncall,review}.md`
-
-### 2. Memory 召回三条路径
-
+### 安全护栏与 HITL
 ```bash
-cd demos/hermes-memory-recall
-python demo.py
+# 体验拦截恶意注入，并在敏感操作时手动批准 (yes/no)
+python demos/agent-guardrails/demo.py
 ```
 
-演示：声明式 memory → system prompt 冻结快照；`session_search` / `skill_view` → tool message。
-
-### 3. 闭环学习（进阶）
-
+### 全链路追踪
 ```bash
-cd demos/hermes-closed-loop-learning
-python demo.py
+# 运行并生成结构化的 agent_execution_trace.json 审计日志
+python demos/agent-observability/demo.py
 ```
 
-演示：前台回合结束 → Background Review fork → `memory` / `skill_manage` 写入。
+### 混合评测指标
+```bash
+# 模拟多次运行并计算 pass@k 等关键量化指标
+python demos/agent-evaluation/evaluator.py
+```
 
 ---
 
-## 核心概念速查
+## 🎯 解决的核心痛点
 
-| 概念 | 含义 |
-|------|------|
-| **Progressive Disclosure** | 会话启动只注入 skill 的 name+description；正文通过 `skill_view` 按需加载 |
-| **Stable / Context / Volatile** | System prompt 三层：不变纪律 → 项目文件 → 易变 memory/日期 |
-| **Frozen snapshot** | 会话中途 memory 写入落盘，但不立刻改 system prompt（保 prefix cache） |
-| **Declarative vs Procedural** | MEMORY/USER = 是谁/环境怎样；SKILL = 这类事怎么做 |
-| **Background Review** | 用户看到回复后，fork 子 Agent 审查是否该 patch memory/skill |
-
----
-
-## 与上游 Hermes 的关系
-
-Demo 是对 [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) 关键路径的**缩小可运行复刻**，源码对照见各文档末尾「源码对照索引」及各 demo 文件头注释（如 `agent/system_prompt.py`、`tools/skills_tool.py`）。
-
-本仓库**不是** Hermes 的安装包；要跑完整 Hermes 请跟上游文档。
+| 痛点 | 解决方案 | 对应模块 |
+|------|----------|----------|
+| **非确定性** | 通过多次试验计算 `pass@k` 概率 | `agent-evaluation` |
+| **黑盒化** | 结构化 Trace 记录每一步 Thought/Action | `agent-observability` |
+| **错误级联放大** | 将报错转化为 Observation 触发 Self-Correction | `hermes-orchestration-loop` |
+| **上下文溢出** | 采用 Progressive Disclosure 分级披露与 Prefix Cache | `hermes-session-context-management` |
+| **删库跑路风险** | 执行护栏拦截敏感 Action 并触发人类确认 (HITL) | `agent-guardrails` |
 
 ---
-
-## 调研延伸（仓库外）
-
-| 主题 | 参考 |
-|------|------|
-| Claude Code prompt 拼装 | [Piebald-AI/claude-code-system-prompts](https://github.com/Piebald-AI/claude-code-system-prompts) |
-| OpenClaw system prompt | [docs.openclaw.ai/concepts/system-prompt](https://docs.openclaw.ai/concepts/system-prompt) |
-| Hermes 上游 | [hermes-agent.nousresearch.com/docs](https://hermes-agent.nousresearch.com/docs) |
-
----
-
-*最后更新：2026-06-10*
+*最后更新：2026-06-17*
